@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from "react";
-import Copy from "./Copy";
 import List from "./List";
-import Subscription from "./Subscription";
+import CreateTicket from "./CreateTicket";
 
 function MainContainer() {
-	const [currentPage, setCurrentPage] = useState("sub");
-	const [subData, setSubData] = useState("");
-	const [dbMessage, setDbMessage] = useState("");
-	const [subscriptions, setSubscriptions] = useState([]);
+	const [currentPage, setCurrentPage] = useState("list");
+	const [tickets, setTickets] = useState([]);
+	const [message, setMessage] = useState(null);
+	const [error, setError] = useState(null);
 
 	const submitHandler = (data) => {
-		setCurrentPage("copy");
-		setSubData(data);
+		handleCreateTicket(data);
 	};
 
-	const handleCreateSub = async (data) => {
-		console.log("posted data => " + JSON.stringify(data));
+	const cancelHandler = async (data) => {
 		try {
-			const re = {
+			const post = {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(data),
 			};
 
-			const response = await fetch(
-				`http://127.0.0.1:3001/create/subscription`,
-				re
-			);
+			const response = await fetch(`http://127.0.0.1:3001/ticket/update`, post);
 			const res = await response.json();
+			console.log(res);
 			if (res.status === 200) {
-				fetchSubscriptions();
-				setCurrentPage("list");
+				fetchTickets();
 			} else if (res.status === 400) {
-				setDbMessage("Something went wrong!!");
+				setError("Something went wrong!");
+				setTimeout(() => {
+					setError(null);
+				}, 3000);
 			}
 		} catch (error) {
 			console.log(error);
@@ -40,30 +37,58 @@ function MainContainer() {
 		}
 	};
 
-	const fetchSubscriptions = async () => {
+	const handleCreateTicket = async (data) => {
+		try {
+			const post = {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			};
+
+			const response = await fetch(`http://127.0.0.1:3001/ticket/create`, post);
+			const res = await response.json();
+			if (res.status === 200) {
+				console.log(res);
+				fetchTickets();
+				setCurrentPage("list");
+				setMessage(
+					`Ticket Number ${data.ticketNo} has been issued successfully to passenger ${data.passengerNames}`
+				);
+				setTimeout(() => {
+					setMessage(null);
+				}, 3000);
+			} else if (res.status === 400) {
+				setError(`Ticket ${data.ticketNo} already exists`);
+				setCurrentPage("list");
+				setTimeout(() => {
+					setError(null);
+				}, 3000);
+			}
+		} catch (error) {
+			console.log(error);
+			alert("Error" + error);
+		}
+	};
+
+	const fetchTickets = async () => {
 		try {
 			const re = {
 				method: "GET",
 				headers: { "Content-Type": "application/json" },
 			};
 
-			const response = await fetch(
-				`http://127.0.0.1:3001/fetch/subscriptions`,
-				re
-			);
+			const response = await fetch(`http://127.0.0.1:3001/ticket/list`, re);
 			const res = await response.json();
 			if (res.status === 200) {
-				setSubscriptions(res.data);
-				// setCurrentPage("list");
+				setTickets(res.data);
 			}
 		} catch (error) {
 			console.log(error);
-			alert("Error" + error);
 		}
 	};
 
 	useEffect(() => {
-		fetchSubscriptions();
+		fetchTickets();
 	}, []);
 
 	const navigate = (page) => {
@@ -71,21 +96,19 @@ function MainContainer() {
 	};
 
 	if (currentPage === "sub") {
-		return <Subscription submitHandler={submitHandler} navigate={navigate} />;
+		return <CreateTicket submitHandler={submitHandler} navigate={navigate} />;
 	}
-	if (currentPage === "copy") {
+
+	if (currentPage === "list") {
 		return (
-			<Copy
-				subData={subData}
-				handleCreateSub={handleCreateSub}
-				dbMessage={dbMessage}
+			<List
+				tickets={tickets}
 				navigate={navigate}
-				subscriptions={subscriptions}
+				cancelHandler={cancelHandler}
+				message={message}
+				error={error}
 			/>
 		);
-	}
-	if (currentPage === "list") {
-		return <List subscriptions={subscriptions} navigate={navigate} />;
 	}
 }
 

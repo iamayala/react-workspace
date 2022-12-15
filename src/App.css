@@ -48,6 +48,27 @@ h1 {
 	text-indent: 10px;
 }
 
+.new-btn {
+	width: 30px;
+	height: 30px;
+	border: none;
+	border-radius: 5px;
+	margin-right: 10px;
+	cursor: pointer;
+	background-color: rgb(87, 87, 203);
+	color: #fff;
+}
+
+.custom-input {
+	width: 100%;
+	height: 40px;
+	border: 1px solid #ebebeb;
+	border-radius: 5px;
+	outline: none;
+	text-indent: 10px;
+	justify-content: center;
+}
+
 .formDiv label {
 	margin-bottom: 5px;
 	font-size: 14px;
@@ -173,4 +194,94 @@ table td {
 
 .action-btn:hover {
 	background-color: rgb(154, 154, 232);
+}
+
+.errormessage {
+	margin-top: 5px;
+	font-size: 12px;
+	color: red;
+	text-align: center;
+}
+
+/* modal styling */
+.modal {
+	position: absolute;
+	height: 100vh;
+	width: 100vw;
+	/* background-color: white; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-box {
+	height: 20vh;
+	width: 60vh;
+	background-color: #fafafa;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: 20px;
+}
+
+.modal-box h1 {
+	font-size: 20px;
+}
+
+.modal-box p {
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+
+.modal-btn {
+	border: none;
+	height: 35px;
+	padding-inline: 20px;
+	margin-right: 3px;
+	margin-left: 3px;
+	border-radius: 2px;
+	cursor: pointer;
+	transition: 0.3s ease-in-out;
+	width: 100px;
+}
+
+.bg-success {
+	background-color: #5cb85c;
+}
+
+.bg-danger {
+	background-color: #d9534f;
+}
+
+.listHeaderNew {
+	display: flex;
+	align-items: center;
+}
+
+.toast-message {
+	align-self: center;
+	background-color: #5cb85c;
+	color: #fff;
+	padding-inline: 15px;
+	font-size: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+
+.toast-error {
+	align-self: center;
+	background-color: #d9534f;
+	color: #fff;
+	padding-inline: 15px;
+	font-size: 12px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	border-radius: 5px;
 }
